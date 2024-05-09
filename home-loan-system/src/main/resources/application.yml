@@ -1,0 +1,11 @@
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/hls
+        username: root
+        password:
+        driver-class-name: com.mysql.jdbc.Driver
+
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        generate-ddl: true
+        hibernate.ddl-auto: update
