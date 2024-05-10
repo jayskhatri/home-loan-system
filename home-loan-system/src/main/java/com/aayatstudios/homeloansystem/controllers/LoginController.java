@@ -1,6 +1,8 @@
 package com.aayatstudios.homeloansystem.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aayatstudios.homeloansystem.services.impl.LoginServiceImpl;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class LoginController {
 
@@ -17,12 +20,12 @@ public class LoginController {
     private LoginServiceImpl loginService;
     
     @PostMapping("/login")
-    public String loginUser(@RequestParam String username, @RequestParam String password){
+    public ResponseEntity<String> loginUser(@RequestParam String username, @RequestParam String password){
         System.out.println("Username: " + username + " Password: " + password);
         if(loginService.validatePersonCredentials(username, password)){
-            return "User logged in";
+            return ResponseEntity.ok("User logged in");
         }
-        return "Invalid credentials";
+        return ResponseEntity.badRequest().body("Invalid credentials");
     }
 
     @GetMapping("/login")
