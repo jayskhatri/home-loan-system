@@ -9,20 +9,24 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch('http://localhost:8080/api/v1/login?username='+username+'&password='+password, {
-        method: 'POST',
+    fetch('http://localhost:8080/api/v1/login?username=' + username + '&password=' + password, {
+      method: 'POST',
     })
-        .then(response => {
-            if(response.ok){
-                navigate(`/dashboard`);
-            }else{
-                alert("Enter the valid credentials");
-            }
-        })
-        .catch(error => {
-            // Handle any errors here
-            console.error(error);
-        });
+      .then(response => {
+        if (response.ok && response.status === 200) {
+          navigate(`/dashboard`);
+        } else if (response.status === 401 || response.status == 400){
+          alert("Enter the valid credentials");
+        } else if(response.status === 404){
+          alert("User not found");
+        }else {
+          alert("Something went wrong. Please try again later.");
+        }
+      })
+      .catch(error => {
+        // Handle any errors here
+        console.error(error);
+      });
     console.log('Username:', username);
     console.log('Password:', password);
 

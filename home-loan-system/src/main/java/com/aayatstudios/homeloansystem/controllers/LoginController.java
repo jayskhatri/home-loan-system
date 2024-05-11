@@ -22,10 +22,13 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestParam String username, @RequestParam String password){
         System.out.println("Username: " + username + " Password: " + password);
-        if(loginService.validatePersonCredentials(username, password)){
+        boolean authorized = loginService.validatePersonCredentials(username, password);
+        if(authorized){
             return ResponseEntity.ok("User logged in");
+        }else if(!authorized){
+            return ResponseEntity.badRequest().body("Invalid credentials");
         }
-        return ResponseEntity.badRequest().body("Invalid credentials");
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/login")
