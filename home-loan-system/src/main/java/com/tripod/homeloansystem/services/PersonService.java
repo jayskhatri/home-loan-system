@@ -1,9 +1,9 @@
-package com.aayatstudios.homeloansystem.services;
+package com.tripod.homeloansystem.services;
 
 import java.util.List;
 import java.util.Map;
 
-import com.aayatstudios.homeloansystem.models.Person;
+import com.tripod.homeloansystem.models.Person;
 
 public interface PersonService {
     

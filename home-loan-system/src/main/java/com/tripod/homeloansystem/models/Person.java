@@ -1,4 +1,4 @@
-package com.aayatstudios.homeloansystem.models;
+package com.tripod.homeloansystem.models;
 
 import java.io.Serializable;
 

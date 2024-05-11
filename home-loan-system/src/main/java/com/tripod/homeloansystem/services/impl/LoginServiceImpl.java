@@ -1,11 +1,11 @@
-package com.aayatstudios.homeloansystem.services.impl;
+package com.tripod.homeloansystem.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aayatstudios.homeloansystem.models.Person;
-import com.aayatstudios.homeloansystem.repositories.PersonRepository;
-import com.aayatstudios.homeloansystem.services.LoginService;
+import com.tripod.homeloansystem.models.Person;
+import com.tripod.homeloansystem.repositories.PersonRepository;
+import com.tripod.homeloansystem.services.LoginService;
 
 @Service
 public class LoginServiceImpl implements LoginService{

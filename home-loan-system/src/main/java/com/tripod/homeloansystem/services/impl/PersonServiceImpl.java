@@ -1,4 +1,4 @@
-package com.aayatstudios.homeloansystem.services.impl;
+package com.tripod.homeloansystem.services.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -6,10 +6,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aayatstudios.homeloansystem.exceptions.ResourceNotFoundException;
-import com.aayatstudios.homeloansystem.models.Person;
-import com.aayatstudios.homeloansystem.repositories.PersonRepository;
-import com.aayatstudios.homeloansystem.services.PersonService;
+import com.tripod.homeloansystem.exceptions.ResourceNotFoundException;
+import com.tripod.homeloansystem.models.Person;
+import com.tripod.homeloansystem.repositories.PersonRepository;
+import com.tripod.homeloansystem.services.PersonService;
 
 @Service
 public class PersonServiceImpl implements PersonService{

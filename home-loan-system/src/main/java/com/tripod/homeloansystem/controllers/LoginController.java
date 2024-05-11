@@ -1,4 +1,4 @@
-package com.aayatstudios.homeloansystem.controllers;
+package com.tripod.homeloansystem.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aayatstudios.homeloansystem.services.impl.LoginServiceImpl;
+import com.tripod.homeloansystem.services.impl.LoginServiceImpl;
+
 
 @RestController
 @CrossOrigin(origins = "*")

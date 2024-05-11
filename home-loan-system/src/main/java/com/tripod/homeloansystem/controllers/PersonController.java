@@ -1,4 +1,4 @@
-package com.aayatstudios.homeloansystem.controllers;
+package com.tripod.homeloansystem.controllers;
 
 import java.util.List;
 import java.util.Map;
@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aayatstudios.homeloansystem.models.Person;
-import com.aayatstudios.homeloansystem.services.impl.PersonServiceImpl;
+import com.tripod.homeloansystem.models.Person;
+import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
+
 
 @RestController
 @CrossOrigin(origins = "*")

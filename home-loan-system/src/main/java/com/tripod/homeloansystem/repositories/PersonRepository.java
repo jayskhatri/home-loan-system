@@ -1,11 +1,12 @@
-package com.aayatstudios.homeloansystem.repositories;
+package com.tripod.homeloansystem.repositories;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.aayatstudios.homeloansystem.models.Person;
+import com.tripod.homeloansystem.models.Person;
+
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long>{
