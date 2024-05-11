@@ -1,4 +1,4 @@
-package com.aayatstudios.homeloansystem;
+package com.tripod.homeloansystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

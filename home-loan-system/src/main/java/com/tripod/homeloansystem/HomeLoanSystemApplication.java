@@ -1,4 +1,4 @@
-package com.aayatstudios.homeloansystem;
+package com.tripod.homeloansystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
