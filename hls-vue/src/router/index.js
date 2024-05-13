@@ -11,8 +11,8 @@ import Homepage from '../components/Homepage.vue'
 import Login from '../pages/Login.vue'
 
 const routes = [
-  { path: '/', component: Homepage},
   { path: '/login', component: Login},
+  { path: '/', component: Homepage},
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

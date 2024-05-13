@@ -8,11 +8,6 @@
       <v-tab value="userDashboard">User Dashboard</v-tab>
       <v-tab value="loanApplications">Loan Applications</v-tab>
       <v-tab value="myProfile">My Profile</v-tab>
-      <!-- <v-tab value="four">
-        <v-avatar color="info">
-          <v-icon icon="mdi-account-circle"></v-icon>
-        </v-avatar>
-      </v-tab> -->
     </v-tabs>
 
     <v-card-text>
@@ -22,7 +17,7 @@
         </v-tabs-window-item>
 
         <v-tabs-window-item value="userDashboard">
-          <LoanApplications />
+          <UserDashboard />
         </v-tabs-window-item>
 
         <v-tabs-window-item value="myProfile">
@@ -34,9 +29,21 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { ref } from 'vue';
+
   export default {
     data: () => ({
       tab: null,
     }),
   }
 </script>
+
+<style scoped>
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 50px;
+  z-index: 2;
+}
+</style>
