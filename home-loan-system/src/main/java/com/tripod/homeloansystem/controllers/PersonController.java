@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,9 @@ public class PersonController {
     @Autowired
     private PersonServiceImpl personService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/")
     public ResponseEntity<List<Person>> getCustomers(){
         List<Person> list = personService.getCustomers();
@@ -34,9 +39,12 @@ public class PersonController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<Person> registerUser(@RequestBody Person person){
         System.out.println("Person: " + person);
+        
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
         Person newPerson = personService.createPerson(person);
         if(newPerson != null) return ResponseEntity.ok(newPerson);
         return ResponseEntity.noContent().build();
@@ -58,6 +66,15 @@ public class PersonController {
     @DeleteMapping("/{userId}/delete")
     public ResponseEntity<Map.Entry<String, Boolean>> deleteUser(@PathVariable Long userId){
         return ResponseEntity.ok(personService.deletePersonById(userId));
+    }
+
+    @PostMapping("/init")
+    public ResponseEntity<Person> init(@RequestBody Person person){
+        System.out.println("Person: " + person);
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
+        Person newPerson = personService.createPerson(person);
+        if(newPerson != null) return ResponseEntity.ok(newPerson);
+        return ResponseEntity.noContent().build();
     }
     
 }
