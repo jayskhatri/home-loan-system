@@ -183,7 +183,6 @@
         getCustomers(){
           axios.get('/users/')
           .then(response => {
-            console.log(response.data);
             this.customers = response.data;
           })
           .catch(error => {
@@ -193,6 +192,7 @@
         handleDialog(){
           this.dialog = !this.dialog;
           this.update = false;
+          this.clearVariables();
         },
 
         clearVariables(){
@@ -268,25 +268,13 @@
             }).then(response => {
               console.log(response.status);
               if (response.status === 200) {
+                this.customers.push(response.data);
                 alert("User added successfully.");
               } else {
                 alert("Something went wrong. Please try again later.");
               }
             }).catch(error => {
               alert("Something went wrong. Please try again later.");
-            });
-            this.customers.push({
-              firstName: this.firstName,
-              middleName: this.middleName,
-              lastName: this.lastName,
-              username: this.username,
-              password: this.password,
-              phoneNumber: this.phoneNumber,
-              address: this.address,
-              dateOfBirth: this.dateOfBirth,
-              email: this.email,
-              isAdmin: this.isAdmin,
-              isFirstLogin: true
             });
             this.clearVariables();
           }
