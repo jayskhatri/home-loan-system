@@ -12,9 +12,6 @@
             Username
           </th>
           <th class="text-left">
-            Password
-          </th>
-          <th class="text-left">
             Phone Number
           </th>
           <th class="text-left">
@@ -36,7 +33,6 @@
           <td>{{ customer.personId }}</td>
           <td>{{ customer.firstName }} {{ customer.lastName }}</td>
           <td>{{ customer.username }}</td>
-          <td>{{ customer.password }}</td>
           <td>{{ customer.phoneNumber }}</td>
           <td>{{ customer.email }}</td>
           <td>{{ customer.address }}</td>
@@ -148,6 +144,7 @@
     export default {
       data () {
         return {
+          token: '',
           customers: [],
           customer: {},
           update: true,
@@ -181,7 +178,9 @@
       },
       methods:{
         getCustomers(){
-          axios.get('/users/')
+          this.token = localStorage.getItem('token');
+          console.log('TOKEN: ' + this.token);
+          axios.get('/users/', {headers: {'Authorization': `Bearer ${this.token}`}})
           .then(response => {
             this.customers = response.data;
           })
@@ -226,7 +225,9 @@
               email: this.email,
               isAdmin: this.isAdmin,
               isFirstLogin: this.customer.isFirstLogin
-            }).then(response => {
+            }, {headers:{
+              'Authorization': `Bearer ${this.token}`
+            }}).then(response => {
               console.log(response.status);
               if (response.status === 200) {
                 alert("User updated successfully.");
@@ -265,6 +266,11 @@
               email: this.email,
               isAdmin: this.isAdmin,
               isFirstLogin: true
+            },{
+              headers:{
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+              }
             }).then(response => {
               console.log(response.status);
               if (response.status === 200) {
@@ -297,7 +303,11 @@
         },
 
         handleDeleteUser(customer){
-          axios.delete('/users/' + customer.personId + '/delete')
+          axios.delete('/users/' + customer.personId + '/delete', {
+            headers:{
+              'Authorization': `Bearer ${this.token}`
+            }
+          })
             .then(response => {
               console.log(response.status);
               if (response.status === 200) {

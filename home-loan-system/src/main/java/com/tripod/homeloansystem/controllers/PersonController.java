@@ -32,6 +32,7 @@ public class PersonController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<List<Person>> getCustomers(){
         List<Person> list = personService.getCustomers();
@@ -57,12 +58,15 @@ public class PersonController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{userId}/update")
     public ResponseEntity<Map.Entry<String, Boolean>> updateUser(@PathVariable Long userId, @RequestBody Person person){
         System.out.println("Person: " + person);
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
         return ResponseEntity.ok(personService.updatePerson(person));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}/delete")
     public ResponseEntity<Map.Entry<String, Boolean>> deleteUser(@PathVariable Long userId){
         return ResponseEntity.ok(personService.deletePersonById(userId));
