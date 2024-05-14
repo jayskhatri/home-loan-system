@@ -9,3 +9,20 @@ spring:
         database-platform: org.hibernate.dialect.MySQL8Dialect
         generate-ddl: true
         hibernate.ddl-auto: update
+
+security:
+    jwt:
+        token:
+            secret-key: mysecretasdfjfds773463463463463463463463463463hdfh
+            expiration: 3600000
+
+
+logging:
+    level:
+        org:
+            springframework: DEBUG
+            hibernate:
+                SQL: DEBUG
+        com:
+            tripod:
+                homeloansystem: DEBUG

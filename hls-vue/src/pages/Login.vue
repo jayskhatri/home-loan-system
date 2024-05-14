@@ -23,6 +23,7 @@ import axios from 'axios';
       return {
       username: '',
       password: '',
+      token: '',
       usernameRules: [
         (v) => !!v || 'Username is required'
       ],
@@ -37,15 +38,18 @@ import axios from 'axios';
         console.log('Last name:', this.password);
         console.log('http://localhost:8080/api/v1/login?username=' + this.username + '&password=' + this.password);
         
-          axios.post('http://localhost:8080/api/v1/login?username=' + this.username + '&password=' + this.password, {
+          axios.post('http://localhost:8080/api/v1/login', {
             username: this.username,
             password: this.password
           })
           .then(response => {
             // Handle the response from the API
-            console.log(response.status);
+            console.log(response);
 
             if (response.status === 200) {
+              this.token = response.data.jwtToken;
+              console.log('TOKEN: ' + this.token);
+              localStorage.setItem('token', this.token);
               this.$router.push('/');
             } else {
               alert("Something went wrong. Please try again later.");

@@ -51,7 +51,7 @@ public class PersonServiceImpl implements PersonService{
 
     @Override
     public Person getPersonByUsername(String username) {
-        return personRepository.findByUsername(username);
+        return personRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Person not found"));
     }
 
     @Override
