@@ -11,6 +11,6 @@
 - After adding above db u should be able to run the backend
 
 ### frontend
-- Open `hls-frontend` folder
-- run `npm install`
-- run `npm start`
+- Open `hls-vue` folder
+- run `yarn add`
+- run `npm dev`
