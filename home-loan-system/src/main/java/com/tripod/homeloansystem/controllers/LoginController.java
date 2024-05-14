@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +20,8 @@ import com.tripod.homeloansystem.exceptions.TokenRefreshException;
 import com.tripod.homeloansystem.jwt.JwtUtils;
 import com.tripod.homeloansystem.jwt.LoginRequest;
 import com.tripod.homeloansystem.jwt.LoginResponse;
-import com.tripod.homeloansystem.jwt.RefreshToken;
 import com.tripod.homeloansystem.models.Person;
+import com.tripod.homeloansystem.models.RefreshToken;
 import com.tripod.homeloansystem.models.TokenRefreshRequest;
 import com.tripod.homeloansystem.models.TokenRefreshResponse;
 import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
@@ -54,7 +53,6 @@ public class LoginController {
         try{
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         }catch(AuthenticationException e){
-            System.out.println("Sherin on the meet");
             return ResponseEntity.badRequest().body("Invalid username or password!");
         }
 
@@ -91,7 +89,7 @@ public class LoginController {
                 String token = jwtUtils.generateTokenFromUsername(user);
                 refreshTokenService.deleteByUserId(user.getPersonId());
                 RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user.getPersonId());
-                return ResponseEntity.ok(new TokenRefreshResponse(token, newRefreshToken.getToken()));
+                return ResponseEntity.ok(new TokenRefreshResponse(token, newRefreshToken.getToken(), newRefreshToken.getExpiryDate()));
             })
             .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                 "Refresh token is not in database!"));

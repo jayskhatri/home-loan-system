@@ -2,9 +2,9 @@ package com.tripod.homeloansystem.jwt;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
+import com.tripod.homeloansystem.models.RefreshToken;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class LoginResponse {

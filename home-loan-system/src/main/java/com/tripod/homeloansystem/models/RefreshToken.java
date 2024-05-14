@@ -1,8 +1,6 @@
-package com.tripod.homeloansystem.jwt;
+package com.tripod.homeloansystem.models;
 
 import java.time.Instant;
-
-import com.tripod.homeloansystem.models.Person;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

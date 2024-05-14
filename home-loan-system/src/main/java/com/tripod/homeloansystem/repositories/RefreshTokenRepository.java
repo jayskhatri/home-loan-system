@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
-import com.tripod.homeloansystem.jwt.RefreshToken;
 import com.tripod.homeloansystem.models.Person;
+import com.tripod.homeloansystem.models.RefreshToken;
 
 
 @Repository
