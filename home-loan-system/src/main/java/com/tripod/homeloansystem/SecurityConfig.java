@@ -42,6 +42,7 @@ public class SecurityConfig {
             authorizereq.requestMatchers("/h2-console/**").permitAll()
             .requestMatchers("/api/v1/login").permitAll()
             .requestMatchers("/api/v1/users/init").permitAll()
+            .requestMatchers("/api/v1/refreshtoken").permitAll()
             .anyRequest().authenticated()
         );
 

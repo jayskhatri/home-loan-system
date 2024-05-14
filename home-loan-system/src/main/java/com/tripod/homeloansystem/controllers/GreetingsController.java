@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tripod.homeloansystem.jwt.JwtUtils;
 import com.tripod.homeloansystem.jwt.LoginRequest;
 import com.tripod.homeloansystem.jwt.LoginResponse;
+import com.tripod.homeloansystem.models.Person;
 
 @RestController
 public class GreetingsController {
@@ -53,11 +54,11 @@ public class GreetingsController {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Person userDetails = (Person) authentication.getPrincipal();
         String jwt = jwtUtils.generateTokenFromUsername(userDetails);
         
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
-        LoginResponse loginResponse = new LoginResponse(jwt, userDetails.getUsername(), roles);
+        LoginResponse loginResponse = new LoginResponse(jwt, userDetails.getPersonId(), userDetails.getUsername(), null, roles);
         return ResponseEntity.ok(loginResponse);
 
     }
