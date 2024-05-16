@@ -239,9 +239,7 @@
               email: this.email,
               isAdmin: this.isAdmin,
               isFirstLogin: this.customer.isFirstLogin
-            }, {headers:{
-              'Authorization': `Bearer ${this.token}`
-            }}).then(response => {
+            }).then(response => {
               console.log(response.status);
               if (response.status === 200) {
                 alert("User updated successfully.");
@@ -280,11 +278,6 @@
               email: this.email,
               isAdmin: this.isAdmin,
               isFirstLogin: true
-            },{
-              headers:{
-                'Authorization': `Bearer ${this.token}`,
-                'Content-Type': 'application/json'
-              }
             }).then(response => {
               console.log(response.status);
               if (response.status === 200) {
