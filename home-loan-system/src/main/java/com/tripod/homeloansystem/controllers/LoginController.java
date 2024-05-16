@@ -95,14 +95,4 @@ public class LoginController {
                 "Refresh token is not in database!"));
     }
 
-    @GetMapping("/login")
-    public String loginUser(){
-        return "User logged in";
-    }
-
-    @GetMapping("/logout")
-    public String logoutUser(){
-        return "User logged out";
-    }
-
 }
