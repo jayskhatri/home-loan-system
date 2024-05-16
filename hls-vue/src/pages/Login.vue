@@ -71,6 +71,21 @@ export default {
                 error.response.data.message) ||
               error.message ||
               error.toString();
+              if(error && error.response){
+                if(error.response.status === 401 || error.response.status === 403){
+                  this.$store.dispatch('auth/logout');
+                  this.$router.push("/login");
+                }
+                else if(error.response.status === 400){
+                  alert("Invalid username or password");
+                }else if(error.response.status === 404){
+                  alert("User not found");
+                }
+              } else{
+                alert("An error occurred. Please try again later");
+                this.username = '';
+                this.password = '';
+              }
           }
         );
       },
