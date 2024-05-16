@@ -14,9 +14,9 @@ security:
     jwt:
         token:
             secret-key: mysecretasdfjfds773463463463463463463463463463hdfh
-            expiration: 60000
+            expiration: 600000
         refreshToken:
-            expiration: 120000
+            expiration: 1200000
 
 
 logging:

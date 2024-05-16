@@ -53,6 +53,7 @@ public class LoginController {
         try{
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         }catch(AuthenticationException e){
+            System.out.println(e.getStackTrace() + " " + e.getMessage());
             return ResponseEntity.badRequest().body("Invalid username or password!");
         }
 

@@ -25,7 +25,7 @@ public class PersonServiceImpl implements PersonService{
 
     @Override
     public Map.Entry<String, Boolean> updatePerson(Person person) {
-        Person personFromRepo = personRepository.findById(person.getPersonId()).orElseThrow(() -> new RuntimeException("Person not found"));
+        Person personFromRepo = personRepository.findById(person.getPersonId()).orElse(null);
         if(personFromRepo != null){
             personFromRepo.setFirstName(person.getFirstName());
             personFromRepo.setMiddleName(person.getMiddleName());
@@ -46,17 +46,17 @@ public class PersonServiceImpl implements PersonService{
 
     @Override
     public Person getPersonById(Long personId) {
-        return personRepository.findById(personId).orElseThrow(() -> new ResourceNotFoundException("Person not found"));
+        return personRepository.findById(personId).orElse(null);
     }
 
     @Override
     public Person getPersonByUsername(String username) {
-        return personRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Person not found"));
+        return personRepository.findByUsername(username).orElse(null);
     }
 
     @Override
     public Map.Entry<String, Boolean> deletePersonById(Long personId) {
-        Person person = personRepository.findById(personId).orElseThrow(() -> new ResourceNotFoundException("Person not found"));
+        Person person = personRepository.findById(personId).orElse(null);
         if(person != null){
             personRepository.delete(person);
             return Map.entry("Deleted", Boolean.TRUE);
