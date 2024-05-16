@@ -28,14 +28,11 @@ class TokenService {
     removeUser() {
       localStorage.removeItem("user");
     }
-
-    isAdminUser(){
-      const user = JSON.parse(localStorage.getItem("user"));
-      if(user.roles.includes("ADMIN")){
-        return true;
-      }
-      return false;
-    }
   }
   
   export default new TokenService();
+  
+  /**
+   * 
+   
+   */

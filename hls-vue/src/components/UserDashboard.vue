@@ -176,32 +176,27 @@
       computed: {
           currentUser() {
               return this.$store.state.auth.user;
-          },
-          isAdminUser(){
-            var roles = this.$store.state.auth.user.roles;
-            return roles.includes('ADMIN');
           }
       },
       mounted() {
           if (!this.currentUser) {
             this.$router.push('/login');
           }
-          this.getCustomers();
+      },
+      mounted() {
+        this.getCustomers();
       },
       methods:{
         getCustomers(){
-          if(this.isAdminUser){
             UserService.getCustomers().then(response => {
               this.customers = response.data;
             }).catch(error => {
               console.log('getCustomers: ' + error);
               if(error.response.status === 401 || error.response.status === 403){
-                this.logOut();
+                store.dispatch('auth/logout');
+                this.$router.push('/login');
               }
             });
-          }else{
-            this.logOut();
-          }
         },
         handleDialog(){
           this.dialog = !this.dialog;
@@ -323,11 +318,6 @@
           }).catch(error => {
             alert("Something went wrong. Please try again later.");
           });
-        },
-
-        logOut() {
-            this.$store.dispatch('auth/logout');
-            this.$router.push('/login');
         }
 
       }
