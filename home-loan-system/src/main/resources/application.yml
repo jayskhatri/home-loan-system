@@ -16,7 +16,7 @@ security:
             secret-key: mysecretasdfjfds773463463463463463463463463463hdfh
             expiration: 60000
         refreshToken:
-            expiration: 1200000
+            expiration: 120000
 
 
 logging:

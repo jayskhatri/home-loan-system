@@ -193,7 +193,8 @@
             }).catch(error => {
               console.log('getCustomers: ' + error);
               if(error.response.status === 401 || error.response.status === 403){
-                // this.$router.push('/login');
+                store.dispatch('auth/logout');
+                this.$router.push('/login');
               }
             });
         },
@@ -243,32 +244,6 @@
             }).catch(error => {
               alert("Something went wrong. Please try again later.");
             });
-            // // console.log(this.customer.personId);
-            // axios.put('/users/' + this.customer.personId + '/update', {
-            //   personId: this.customer.personId,
-            //   firstName: this.firstName,
-            //   middleName: this.middleName,
-            //   lastName: this.lastName,
-            //   username: this.username,
-            //   password: this.password,
-            //   phoneNumber: this.phoneNumber,
-            //   address: this.address,
-            //   dateOfBirth: this.dateOfBirth,
-            //   email: this.email,
-            //   isAdmin: this.isAdmin,
-            //   isFirstLogin: this.customer.isFirstLogin
-            // }, {headers:{
-            //   'Authorization': `Bearer ${this.token}`
-            // }}).then(response => {
-            //   console.log(response.status);
-            //   if (response.status === 200) {
-            //     alert("User updated successfully.");
-            //   } else {
-            //     alert("Something went wrong. Please try again later.");
-            //   }
-            // }).catch(error => {
-            //   alert("Something went wrong. Please try again later.");
-            // });
 
             this.customers = this.customers.map(c => {
               if(c.personId === this.customer.personId){
