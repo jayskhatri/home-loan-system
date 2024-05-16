@@ -2,6 +2,8 @@ package com.tripod.homeloansystem.models;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +23,7 @@ public class RefreshToken {
     private long id;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "person_id", referencedColumnName = "person_id")
     private Person user;
 

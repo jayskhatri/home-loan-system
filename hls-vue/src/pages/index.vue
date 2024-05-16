@@ -1,7 +1,4 @@
 <template>
-  <Homepage />
+    <Toolbar/>
+    <Home/>
 </template>
-
-<script setup>
-  //
-</script>

@@ -140,7 +140,7 @@
     
   </template>
   <script>
-  import axios from '@/services/axios';
+  import UserService from "@/services/user.service";
     export default {
       data () {
         return {
@@ -173,20 +173,29 @@
           ],
         }
       },
+      computed: {
+          currentUser() {
+              return this.$store.state.auth.user;
+          }
+      },
+      mounted() {
+          if (!this.currentUser) {
+            this.$router.push('/login');
+          }
+      },
       mounted() {
         this.getCustomers();
       },
       methods:{
         getCustomers(){
-          this.token = localStorage.getItem('token');
-          console.log('TOKEN: ' + this.token);
-          axios.get('/users/', {headers: {'Authorization': `Bearer ${this.token}`}})
-          .then(response => {
-            this.customers = response.data;
-          })
-          .catch(error => {
-            
-          });
+            UserService.getCustomers().then(response => {
+              this.customers = response.data;
+            }).catch(error => {
+              console.log('getCustomers: ' + error);
+              if(error.response.status === 401 || error.response.status === 403){
+                // this.$router.push('/login');
+              }
+            });
         },
         handleDialog(){
           this.dialog = !this.dialog;
@@ -211,8 +220,7 @@
           this.dialog = false;
           
           if(this.update){
-            // console.log(this.customer.personId);
-            axios.put('/users/' + this.customer.personId + '/update', {
+            UserService.updateCustomer(this.customer.personId, {
               personId: this.customer.personId,
               firstName: this.firstName,
               middleName: this.middleName,
@@ -225,9 +233,7 @@
               email: this.email,
               isAdmin: this.isAdmin,
               isFirstLogin: this.customer.isFirstLogin
-            }, {headers:{
-              'Authorization': `Bearer ${this.token}`
-            }}).then(response => {
+            }).then(response => {
               console.log(response.status);
               if (response.status === 200) {
                 alert("User updated successfully.");
@@ -237,6 +243,32 @@
             }).catch(error => {
               alert("Something went wrong. Please try again later.");
             });
+            // // console.log(this.customer.personId);
+            // axios.put('/users/' + this.customer.personId + '/update', {
+            //   personId: this.customer.personId,
+            //   firstName: this.firstName,
+            //   middleName: this.middleName,
+            //   lastName: this.lastName,
+            //   username: this.username,
+            //   password: this.password,
+            //   phoneNumber: this.phoneNumber,
+            //   address: this.address,
+            //   dateOfBirth: this.dateOfBirth,
+            //   email: this.email,
+            //   isAdmin: this.isAdmin,
+            //   isFirstLogin: this.customer.isFirstLogin
+            // }, {headers:{
+            //   'Authorization': `Bearer ${this.token}`
+            // }}).then(response => {
+            //   console.log(response.status);
+            //   if (response.status === 200) {
+            //     alert("User updated successfully.");
+            //   } else {
+            //     alert("Something went wrong. Please try again later.");
+            //   }
+            // }).catch(error => {
+            //   alert("Something went wrong. Please try again later.");
+            // });
 
             this.customers = this.customers.map(c => {
               if(c.personId === this.customer.personId){
@@ -254,7 +286,7 @@
               return c;
             });
           }else{
-            axios.post('/users/register', {
+            UserService.addCustomer({
               firstName: this.firstName,
               middleName: this.middleName,
               lastName: this.lastName,
@@ -266,11 +298,6 @@
               email: this.email,
               isAdmin: this.isAdmin,
               isFirstLogin: true
-            },{
-              headers:{
-                'Authorization': `Bearer ${this.token}`,
-                'Content-Type': 'application/json'
-              }
             }).then(response => {
               console.log(response.status);
               if (response.status === 200) {
@@ -303,23 +330,19 @@
         },
 
         handleDeleteUser(customer){
-          axios.delete('/users/' + customer.personId + '/delete', {
-            headers:{
-              'Authorization': `Bearer ${this.token}`
-            }
-          })
-            .then(response => {
-              console.log(response.status);
-              if (response.status === 200) {
-                alert("User deleted successfully.");
-                this.customers = this.customers.filter(c => c.personId !== customer.personId);
-              } else {
-                alert("Something went wrong. Please try again later.");
-              }
-            })
-            .catch(error => {
+          this.dialog = false;
+          console.log(customer.personId);
+          UserService.deleteCustomer(customer.personId).then(response => {
+            console.log(response.status);
+            if (response.status === 200) {
+              alert("User deleted successfully.");
+              this.customers = this.customers.filter(c => c.personId !== customer.personId);
+            } else {
               alert("Something went wrong. Please try again later.");
-            });
+            }
+          }).catch(error => {
+            alert("Something went wrong. Please try again later.");
+          });
         }
 
       }
