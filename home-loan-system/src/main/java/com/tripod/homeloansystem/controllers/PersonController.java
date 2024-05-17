@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tripod.homeloansystem.models.Person;
+import com.tripod.homeloansystem.models.dto.PersonDTO;
 import com.tripod.homeloansystem.repositories.RefreshTokenRepository;
 import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
 
@@ -40,37 +41,32 @@ public class PersonController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
-    public ResponseEntity<List<Person>> getCustomers(){
-        List<Person> list = personService.getCustomers();
-        if(list.size() > 0) return ResponseEntity.ok(list);
+    public ResponseEntity<List<PersonDTO>> getCustomers(){
+        List<PersonDTO> listDTO = personService.getCustomers().stream().map(person -> personToDTO(person)).toList();
+        if(listDTO.size() > 0) return ResponseEntity.ok(listDTO);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
-    public ResponseEntity<Person> registerUser(@RequestBody Person person){
-        System.out.println("Person: " + person);
-        
+    public ResponseEntity<PersonDTO> registerUser(@RequestBody Person person){
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         Person newPerson = personService.createPerson(person);
-        if(newPerson != null) return ResponseEntity.ok(newPerson);
+        if(newPerson != null) return ResponseEntity.ok(personToDTO(newPerson));
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{userId}")
-    public ResponseEntity<Person> getUserById(@PathVariable Long userId){
-        System.out.println("User ID: " + userId);
+    public ResponseEntity<PersonDTO> getUserById(@PathVariable Long userId){
         Person person = personService.getPersonById(userId);
-        System.out.println("Hihahahahahah Person: " + person);
-        if(person != null) return ResponseEntity.ok(person);
+        if(person != null) return ResponseEntity.ok(personToDTO(person));
         return ResponseEntity.notFound().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{userId}/update")
     public ResponseEntity<Map.Entry<String, Boolean>> updateUser(@PathVariable Long userId, @RequestBody Person person){
-        System.out.println("Person: " + person);
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         return ResponseEntity.ok(personService.updatePerson(person));
     }
@@ -85,12 +81,31 @@ public class PersonController {
     }
 
     @PostMapping("/init")
-    public ResponseEntity<Person> init(@RequestBody Person person){
+    public ResponseEntity<PersonDTO> init(@RequestBody Person person){
         System.out.println("Person: " + person);
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         Person newPerson = personService.createPerson(person);
-        if(newPerson != null) return ResponseEntity.ok(newPerson);
+        if(newPerson != null) return ResponseEntity.ok(personToDTO(newPerson));
         return ResponseEntity.noContent().build();
+    }
+
+    private PersonDTO personToDTO(Person person) {
+        PersonDTO personDTO = new PersonDTO();
+
+        personDTO.setPersonId(person.getPersonId());
+        personDTO.setFirstName(person.getFirstName());
+        personDTO.setMiddleName(person.getMiddleName());
+        personDTO.setLastName(person.getLastName());
+        personDTO.setUsername(person.getUsername());
+        personDTO.setPassword(person.getPassword());
+        personDTO.setEmail(person.getEmail());
+        personDTO.setPhoneNumber(person.getPhoneNumber());
+        personDTO.setAddress(person.getAddress());
+        personDTO.setDateOfBirth(person.getDateOfBirth());
+        personDTO.setIsAdmin(person.getIsAdmin());
+        List<Long> loanApplications = person.getLoanApplications().stream().map(loan -> loan.getLoanApplicationId()).toList();
+        personDTO.setLoanApplications(loanApplications);
+        return personDTO;
     }
     
 }

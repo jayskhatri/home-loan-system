@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tripod.homeloansystem.exceptions.ResourceNotFoundException;
 import com.tripod.homeloansystem.models.Person;
 import com.tripod.homeloansystem.repositories.PersonRepository;
 import com.tripod.homeloansystem.services.PersonService;
