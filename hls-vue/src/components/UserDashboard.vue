@@ -276,12 +276,8 @@
               isFirstLogin: true
             }).then(response => {
               console.log(response.status);
-              if (response.status === 200) {
-                this.customers.push(response.data);
-                alert("User added successfully.");
-              } else {
-                alert("Something went wrong. Please try again later.");
-              }
+              this.customers.push(response.data);
+              alert("User added successfully.");
             }).catch(error => {
               alert("Something went wrong. Please try again later.");
             });
