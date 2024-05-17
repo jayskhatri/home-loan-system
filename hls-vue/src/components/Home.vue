@@ -21,7 +21,7 @@
           </v-tabs-window-item>
   
           <v-tabs-window-item value="myProfile">
-            Three
+            <MyProfile />
           </v-tabs-window-item>
         </v-tabs-window>
       </v-card-text>
