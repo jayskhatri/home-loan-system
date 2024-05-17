@@ -1,5 +1,6 @@
 package com.tripod.homeloansystem.models.dto;
 
+import com.tripod.homeloansystem.models.LoanStatus;
 import com.tripod.homeloansystem.models.LoanType;
 
 import lombok.Data;
@@ -11,7 +12,7 @@ public class LoanApplicationDTO {
     private LoanType loanType;
     private String loanAmount;
     private String loanDuration;
-    private String loanStatus;
+    private LoanStatus loanStatus;
     private String loanInterestRate;
     private String loanStartDate;
     private String loanEndDate;

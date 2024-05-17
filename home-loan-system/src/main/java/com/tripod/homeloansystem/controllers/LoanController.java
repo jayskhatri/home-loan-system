@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tripod.homeloansystem.models.LoanApplication;
+import com.tripod.homeloansystem.models.LoanStatus;
 import com.tripod.homeloansystem.models.dto.LoanApplicationDTO;
 import com.tripod.homeloansystem.services.impl.LoanApplicationServiceImpl;
 import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
@@ -54,6 +56,30 @@ public class LoanController {
     @GetMapping("/all")
     public ResponseEntity<List<LoanApplicationDTO>> getAllLoanApplications() {
         return ResponseEntity.ok(loanApplicationService.getAllLoanApplications().stream().map(application -> loanApplicationToDTO(application)).toList());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{applicationID}/approve")
+    public ResponseEntity<LoanApplicationDTO> approveLoanApplication(@PathVariable Long applicationID) {
+        LoanApplication application = loanApplicationService.getLoanApplicationById(applicationID);
+        if(application != null){
+            application.setLoanStatus(LoanStatus.APPROVED);
+            loanApplicationService.updateLoanApplication(application);
+            return ResponseEntity.ok(loanApplicationToDTO(application));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{applicationID}/reject")
+    public ResponseEntity<LoanApplicationDTO> rejectLoanApplication(@PathVariable Long applicationID) {
+        LoanApplication application = loanApplicationService.getLoanApplicationById(applicationID);
+        if(application != null){
+            application.setLoanStatus(LoanStatus.REJECTED);
+            loanApplicationService.updateLoanApplication(application);
+            return ResponseEntity.ok(loanApplicationToDTO(application));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     private LoanApplication loanDTOtoApplication(LoanApplicationDTO applicationDTO) {

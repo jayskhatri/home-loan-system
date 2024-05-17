@@ -37,7 +37,7 @@ public class LoanApplication implements Serializable{
     private String loanDuration;
 
     @Column(name = "loan_status")
-    private String loanStatus;
+    private LoanStatus loanStatus;
 
     @Column(name = "loan_interest_rate")
     private String loanInterestRate;

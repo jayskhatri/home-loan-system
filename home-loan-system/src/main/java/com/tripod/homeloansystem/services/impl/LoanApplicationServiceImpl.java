@@ -59,18 +59,6 @@ public class LoanApplicationServiceImpl implements Serializable, LoanApplication
     }
 
     @Override
-    public Entry<String, Boolean> approveLoanApplicationById(Long applicationId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'approveLoanApplicationById'");
-    }
-
-    @Override
-    public Entry<String, Boolean> rejectLoanApplicationById(Long applicationId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'rejectLoanApplicationById'");
-    }
-
-    @Override
     public List<LoanApplication> getAllLoanApplications() {
         return loanApplicationRepository.findAll();
     }
