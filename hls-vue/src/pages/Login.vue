@@ -56,7 +56,6 @@ export default {
     },
     methods: {
       handleLogin(user) {
-        console.log('handleLogin');
         this.loading = true;
 
         this.$store.dispatch('auth/login', user).then(
@@ -71,6 +70,11 @@ export default {
                 error.response.data.message) ||
               error.message ||
               error.toString();
+
+              if(error && error.response && error.response.status === 400){
+                alert('Invalid Username or Password');
+              }
+              else console.log('Login.vue :: handleLogin: ' + error);
           }
         );
       },

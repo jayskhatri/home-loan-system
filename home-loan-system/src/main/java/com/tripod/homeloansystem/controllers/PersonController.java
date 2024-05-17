@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tripod.homeloansystem.models.Person;
 import com.tripod.homeloansystem.repositories.RefreshTokenRepository;
 import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
-import com.tripod.homeloansystem.services.impl.RefreshTokenService;
 
 import jakarta.transaction.Transactional;
 

@@ -12,7 +12,7 @@
         <v-spacer></v-spacer>
   
         <v-avatar color="info">
-            <v-icon icon="mdi-account-circle"></v-icon>
+            <v-icon icon="mdi-account-circle" @click="logOut"></v-icon>
         </v-avatar>
 
       </v-toolbar>
@@ -22,11 +22,13 @@
   <script>
   export default {
       data: () => ({
-        user: {
-          initials: 'JD',
-          fullName: 'John Doe',
-          email: 'john.doe@doe.com',
-        },
+        
       }),
+      methods:{
+          logOut() {
+              this.$store.dispatch('auth/logout');
+              this.$router.push('/login');
+          }
+       }
     }
     </script>

@@ -5,8 +5,8 @@
         align-tabs="center"
         bg-color="secondary"
       >
-        <v-tab value="userDashboard">User Dashboard</v-tab>
-        <v-tab value="loanApplications">Loan Applications</v-tab>
+      <v-tab v-if="isAdminUser" value="userDashboard">User Dashboard</v-tab>
+        <v-tab value="loanApplications">{{this.isAdminUser ? 'Loan Applications' : 'Apply for loan'}}</v-tab>
         <v-tab value="myProfile">My Profile</v-tab>
       </v-tabs>
   
@@ -16,7 +16,7 @@
             One
           </v-tabs-window-item>
   
-          <v-tabs-window-item value="userDashboard">
+          <v-tabs-window-item v-if="isAdminUser" value="userDashboard">
             <UserDashboard />
           </v-tabs-window-item>
   
@@ -37,11 +37,16 @@ export default {
     computed: {
         currentUser() {
             return this.$store.state.auth.user;
+        },
+        isAdminUser(){
+          if(this.currentUser === null) return false;
+          var roles = this.$store.state.auth.user.roles;
+          return roles.includes('ADMIN');
         }
     },
     mounted() {
-        if (!this.currentUser) {
-        this.$router.push('/login');
+        if (this.currentUser === null) {
+          this.$router.push('/login');
         }
     },
     methods: {

@@ -182,19 +182,20 @@
           if (!this.currentUser) {
             this.$router.push('/login');
           }
-      },
-      mounted() {
-        this.getCustomers();
+          this.getCustomers();
       },
       methods:{
+        logOut() {
+            this.$store.dispatch('auth/logout');
+            this.$router.push('/login');
+        },
         getCustomers(){
             UserService.getCustomers().then(response => {
               this.customers = response.data;
             }).catch(error => {
               console.log('getCustomers: ' + error);
               if(error.response.status === 401 || error.response.status === 403){
-                store.dispatch('auth/logout');
-                this.$router.push('/login');
+                this.logOut();
               }
             });
         },
