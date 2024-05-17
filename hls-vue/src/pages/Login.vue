@@ -1,68 +1,83 @@
 <template>
-  <v-sheet class="mx-auto" width="300">
-    <v-form @submit.prevent="handleSubmit">
-      <v-text-field
-        v-model="username"
-        :rules="usernameRules"
-        label="Username"
-      ></v-text-field>
-      <v-text-field
-        v-model="password"
-        :rules="passwordRules"
-        label="Password"
-        type="password"
-      ></v-text-field>
-      <v-btn class="mt-2" type="submit" block>Submit</v-btn>
-    </v-form>
-  </v-sheet>
+    <v-container>
+        <v-row>
+            <v-col cols="12" sm="6" offset-sm="3">
+                <v-card>
+                    <v-card-title>
+                        <h1>Login</h1>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-text-field
+                            label="Username"
+                            :rules="usernameRules"
+                            v-model="username"
+                        ></v-text-field>
+                        <v-text-field
+                            v-model="password"
+                            label="Password"
+                            :rules="passwordRules"
+                            type="password"
+                        ></v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-btn color="primary" @click="handleLogin({ username, password })">Login</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 <script>
-import axios from 'axios';
-  export default {
+export default {
+    name: "Login",
     data() {
       return {
-      username: '',
-      password: '',
-      token: '',
-      usernameRules: [
-        (v) => !!v || 'Username is required'
-      ],
-      passwordRules: [
-        (v) => (v && v.length >=4) || 'Password must be at least 4 characters',
-      ],
+        loading: false,
+        username: '',
+        password: '',
+        usernameRules: [
+          v => !!v || 'Username is required',
+        ],
+        passwordRules: [
+          v => !!v || 'Password is required',
+        ],
       };
     },
+    computed: {
+      loggedIn() {
+        console.log('loggedIn: '+ this.$store.state.auth.status.loggedIn);
+        return this.$store.state.auth.status.loggedIn;
+      },
+    },
+    created() {
+      if (this.loggedIn) {
+        this.$router.push("/");
+      }
+    },
     methods: {
-      handleSubmit() {
-        console.log('First name:', this.username);
-        console.log('Last name:', this.password);
-        console.log('http://localhost:8080/api/v1/login?username=' + this.username + '&password=' + this.password);
-        
-          axios.post('http://localhost:8080/api/v1/login', {
-            username: this.username,
-            password: this.password
-          })
-          .then(response => {
-            // Handle the response from the API
-            console.log(response);
+      handleLogin(user) {
+        this.loading = true;
 
-            if (response.status === 200) {
-              this.token = response.data.jwtToken;
-              console.log('TOKEN: ' + this.token);
-              localStorage.setItem('token', this.token);
-              this.$router.push('/');
-            } else {
-              alert("Something went wrong. Please try again later.");
-            }
-          })
-          .catch(error => {
-            if(error.response.status === 401) {
-              alert("Invalid username or password. Please try again.");
-            } else {
-              alert("Something went wrong. Please try again later.");
-            }
-          });
-        },
+        this.$store.dispatch('auth/login', user).then(
+          () => {
+            this.$router.push("/");
+          },
+          (error) => {
+            this.loading = false;
+            this.message =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+              if(error && error.response && error.response.status === 400){
+                alert('Invalid Username or Password');
+              }
+              else console.log('Login.vue :: handleLogin: ' + error);
+          }
+        );
+      },
     },
   };
 </script>

@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tripod.homeloansystem.models.Person;
+import com.tripod.homeloansystem.repositories.RefreshTokenRepository;
 import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
+
+import jakarta.transaction.Transactional;
 
 
 @RestController
@@ -28,6 +31,9 @@ public class PersonController {
     
     @Autowired
     private PersonServiceImpl personService;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -51,11 +57,14 @@ public class PersonController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{userId}")
     public ResponseEntity<Person> getUserById(@PathVariable Long userId){
+        System.out.println("User ID: " + userId);
         Person person = personService.getPersonById(userId);
+        System.out.println("Hihahahahahah Person: " + person);
         if(person != null) return ResponseEntity.ok(person);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -68,7 +77,10 @@ public class PersonController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}/delete")
+    @Transactional
     public ResponseEntity<Map.Entry<String, Boolean>> deleteUser(@PathVariable Long userId){
+        Person person = personService.getPersonById(userId);
+        refreshTokenRepository.deleteByUser(person);
         return ResponseEntity.ok(personService.deletePersonById(userId));
     }
 
