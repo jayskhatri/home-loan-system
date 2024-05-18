@@ -21,6 +21,7 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-btn color="primary" @click="handleLogin({ username, password })">Login</v-btn>
+                      <v-btn color="primary" @click="gotoforgot">Bhul ja</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -55,6 +56,9 @@ export default {
       }
     },
     methods: {
+      gotoforgot(){
+        this.$router.push("/reset");
+      },
       handleLogin(user) {
         this.loading = true;
 
