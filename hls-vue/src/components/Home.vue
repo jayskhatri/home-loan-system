@@ -13,7 +13,7 @@
       <v-card-text>
         <v-tabs-window v-model="tab">
           <v-tabs-window-item value="loanApplications">
-            One
+            <LoanDashboard />
           </v-tabs-window-item>
   
           <v-tabs-window-item v-if="isAdminUser" value="userDashboard">
