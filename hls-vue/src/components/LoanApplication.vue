@@ -94,6 +94,8 @@ export default {
             this.loanDuration = '';
             this.interestRate = '';
             this.startDate = null;
+            this.submission = {};
+            this.saveClicked = false;
         },
         calculateEndDate(startDate, duration){
             let endDate = new Date(startDate);
@@ -131,6 +133,7 @@ export default {
         submitLoan(){
             loanService.saveSubmittedLoanApplication(this.submission.loanApplicationId).then(response => {
                 alert('Loan application submitted successfully.');
+                
                 console.log(response.data);
                 this.clearVariables();
             }).catch(error => {
