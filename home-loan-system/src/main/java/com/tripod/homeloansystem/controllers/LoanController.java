@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tripod.homeloansystem.models.LoanApplication;
 import com.tripod.homeloansystem.models.LoanStatus;
+import com.tripod.homeloansystem.models.Person;
 import com.tripod.homeloansystem.models.dto.LoanApplicationDTO;
-import com.tripod.homeloansystem.models.utils.DTOconversions;
 import com.tripod.homeloansystem.services.impl.LoanApplicationServiceImpl;
+import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
 
 
 @RestController
@@ -31,28 +32,45 @@ public class LoanController {
     @Autowired
     private LoanApplicationServiceImpl loanApplicationService;
 
+    @Autowired
+    private PersonServiceImpl personService;
+
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
     public ResponseEntity<LoanApplicationDTO> createLoanApplication(@RequestBody LoanApplicationDTO application) {
-        return ResponseEntity.ok(DTOconversions.loanApplicationToDTO(loanApplicationService.createLoanApplication(DTOconversions.loanDTOtoApplication(application))));
+        return ResponseEntity.ok(loanApplicationToDTO(loanApplicationService.createLoanApplication(loanDTOtoApplication(application))));
     }
 
     @PreAuthorize("hasRole('USER')")
     @PutMapping("/{applicationID}/update")
     public ResponseEntity<Map.Entry<String, Boolean>> updateLoanApplication(@PathVariable Long applicationID, @RequestBody LoanApplicationDTO application) {
-        return ResponseEntity.ok(loanApplicationService.updateLoanApplication(DTOconversions.loanDTOtoApplication(application)));
+        return ResponseEntity.ok(loanApplicationService.updateLoanApplication(loanDTOtoApplication(application)));
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{applicationID}")
     public ResponseEntity<LoanApplicationDTO> getLoanApplicationById(@PathVariable Long applicationID) {
-        return ResponseEntity.ok(DTOconversions.loanApplicationToDTO(loanApplicationService.getLoanApplicationById(applicationID)));
+        return ResponseEntity.ok(loanApplicationToDTO(loanApplicationService.getLoanApplicationById(applicationID)));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<LoanApplicationDTO>> getAllLoanApplications() {
-        return ResponseEntity.ok(loanApplicationService.getAllLoanApplications().stream().map(application -> DTOconversions.loanApplicationToDTO(application)).toList());
+        return ResponseEntity.ok(loanApplicationService.getAllLoanApplications().stream().map(application -> loanApplicationToDTO(application)).toList());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{applicationID}/save")
+    public ResponseEntity<?> saveLoanApplication(@PathVariable Long applicationID) {
+        LoanApplication application = loanApplicationService.getLoanApplicationById(applicationID);
+        if(application != null && application.getIsSubmitted().equals(Boolean.FALSE)){
+            application.setIsSubmitted(Boolean.TRUE);
+            loanApplicationService.updateLoanApplication(application);
+            return ResponseEntity.ok("SAVED");
+        } else if(application != null){
+            return ResponseEntity.badRequest().body("Loan is already saved");
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -82,33 +100,36 @@ public class LoanController {
         }
         return ResponseEntity.notFound().build();
     }
-    
-    // private LoanApplication loanDTOtoApplication(LoanApplicationDTO applicationDTO) {
-    //     LoanApplication application = new LoanApplication();
-    //     application.setLoanApplicationId(applicationDTO.getLoanApplicationId());
-    //     application.setPerson(personService.getPersonById(applicationDTO.getPersonId()));
-    //     application.setLoanType(applicationDTO.getLoanType());
-    //     application.setLoanAmount(applicationDTO.getLoanAmount());
-    //     application.setLoanDuration(applicationDTO.getLoanDuration());
-    //     application.setLoanStartDate(applicationDTO.getLoanStartDate());
-    //     application.setLoanEndDate(applicationDTO.getLoanEndDate());
-    //     application.setLoanInterestRate(applicationDTO.getLoanInterestRate());
-    //     application.setLoanStatus(applicationDTO.getLoanStatus());
-    //     return application;
-    // }
 
-    // private LoanApplicationDTO loanApplicationToDTO(LoanApplication application) {
-    //     LoanApplicationDTO applicationDTO = new LoanApplicationDTO();
-    //     applicationDTO.setLoanApplicationId(application.getLoanApplicationId());
-    //     applicationDTO.setPersonId(application.getPerson().getPersonId());
-    //     applicationDTO.setLoanType(application.getLoanType());
-    //     applicationDTO.setLoanAmount(application.getLoanAmount());
-    //     applicationDTO.setLoanDuration(application.getLoanDuration());
-    //     applicationDTO.setLoanStartDate(application.getLoanStartDate());
-    //     applicationDTO.setLoanEndDate(application.getLoanEndDate());
-    //     applicationDTO.setLoanInterestRate(application.getLoanInterestRate());
-    //     applicationDTO.setLoanStatus(application.getLoanStatus());
-    //     return applicationDTO;
-    // }
+    private LoanApplication loanDTOtoApplication(LoanApplicationDTO applicationDTO) {
+        LoanApplication application = new LoanApplication();
+        application.setLoanApplicationId(applicationDTO.getLoanApplicationId());
+        application.setLoanType(applicationDTO.getLoanType());
+        application.setLoanAmount(applicationDTO.getLoanAmount());
+        application.setLoanDuration(applicationDTO.getLoanDuration());
+        application.setLoanStartDate(applicationDTO.getLoanStartDate());
+        application.setLoanEndDate(applicationDTO.getLoanEndDate());
+        application.setLoanInterestRate(applicationDTO.getLoanInterestRate());
+        application.setLoanStatus(applicationDTO.getLoanStatus());
+        Person person = personService.getPersonById(applicationDTO.getPersonId());
+        application.setPerson(person);
+        application.setIsSubmitted(applicationDTO.getIsSubmitted());
+        return application;
+    }
+
+    private LoanApplicationDTO loanApplicationToDTO(LoanApplication application) {
+        LoanApplicationDTO applicationDTO = new LoanApplicationDTO();
+        applicationDTO.setLoanApplicationId(application.getLoanApplicationId());
+        applicationDTO.setPersonId(application.getPerson().getPersonId());
+        applicationDTO.setLoanType(application.getLoanType());
+        applicationDTO.setLoanAmount(application.getLoanAmount());
+        applicationDTO.setLoanDuration(application.getLoanDuration());
+        applicationDTO.setLoanStartDate(application.getLoanStartDate());
+        applicationDTO.setLoanEndDate(application.getLoanEndDate());
+        applicationDTO.setLoanInterestRate(application.getLoanInterestRate());
+        applicationDTO.setLoanStatus(application.getLoanStatus());
+        applicationDTO.setIsSubmitted(application.getIsSubmitted());
+        return applicationDTO;
+    }
     
 }

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tripod.homeloansystem.models.Person;
 import com.tripod.homeloansystem.models.dto.PersonDTO;
-import com.tripod.homeloansystem.models.utils.DTOconversions;
 import com.tripod.homeloansystem.repositories.RefreshTokenRepository;
 import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
 
@@ -43,7 +42,7 @@ public class PersonController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<List<PersonDTO>> getCustomers(){
-        List<PersonDTO> listDTO = personService.getCustomers().stream().map(person -> DTOconversions.personToDTO(person)).toList();
+        List<PersonDTO> listDTO = personService.getCustomers().stream().map(person -> personToDTO(person)).toList();
         if(listDTO.size() > 0) return ResponseEntity.ok(listDTO);
         return ResponseEntity.noContent().build();
     }
@@ -53,7 +52,7 @@ public class PersonController {
     public ResponseEntity<PersonDTO> registerUser(@RequestBody Person person){
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         Person newPerson = personService.createPerson(person);
-        if(newPerson != null) return ResponseEntity.ok(DTOconversions.personToDTO(newPerson));
+        if(newPerson != null) return ResponseEntity.ok(personToDTO(newPerson));
         return ResponseEntity.noContent().build();
     }
 
@@ -61,7 +60,7 @@ public class PersonController {
     @GetMapping("/{userId}")
     public ResponseEntity<PersonDTO> getUserById(@PathVariable Long userId){
         Person person = personService.getPersonById(userId);
-        if(person != null) return ResponseEntity.ok(DTOconversions.personToDTO(person));
+        if(person != null) return ResponseEntity.ok(personToDTO(person));
         return ResponseEntity.notFound().build();
     }
 
@@ -86,8 +85,27 @@ public class PersonController {
         System.out.println("Person: " + person);
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         Person newPerson = personService.createPerson(person);
-        if(newPerson != null) return ResponseEntity.ok(DTOconversions.personToDTO(newPerson));
+        if(newPerson != null) return ResponseEntity.ok(personToDTO(newPerson));
         return ResponseEntity.noContent().build();
+    }
+
+    public static PersonDTO personToDTO(Person person) {
+        PersonDTO personDTO = new PersonDTO();
+
+        personDTO.setPersonId(person.getPersonId());
+        personDTO.setFirstName(person.getFirstName());
+        personDTO.setMiddleName(person.getMiddleName());
+        personDTO.setLastName(person.getLastName());
+        personDTO.setUsername(person.getUsername());
+        personDTO.setPassword(person.getPassword());
+        personDTO.setEmail(person.getEmail());
+        personDTO.setPhoneNumber(person.getPhoneNumber());
+        personDTO.setAddress(person.getAddress());
+        personDTO.setDateOfBirth(person.getDateOfBirth());
+        personDTO.setIsAdmin(person.getIsAdmin());
+        List<Long> loanApplications = person.getLoanApplications().stream().map(loan -> loan.getLoanApplicationId()).toList();
+        personDTO.setLoanApplications(loanApplications);
+        return personDTO;
     }
     
 }

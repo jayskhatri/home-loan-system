@@ -16,5 +16,6 @@ public class LoanApplicationDTO {
     private String loanInterestRate;
     private String loanStartDate;
     private String loanEndDate;
+    private Boolean isSubmitted = false;
 
 }

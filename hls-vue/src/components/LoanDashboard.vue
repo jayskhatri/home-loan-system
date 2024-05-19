@@ -56,15 +56,29 @@
         <div>End Date</div>
       </template>
 
+      <template v-slot:header.isSubmitted>
+        <div>Is Submitted</div>
+      </template>
+
       <template v-slot:header.actions="{ header }">
         <div class="text-center">Take Action</div>
       </template>
 
       <template v-slot:item.actions="{ item }">
         <div class="d-flex justify-center">
-          <v-btn color="green" @click="approveLoan(item.loanApplicationId)">APPROVE</v-btn>
-          <v-btn color="red" @click="rejectLoan(item.loanApplicationId)">REJECT</v-btn>
+          <v-btn :disabled="!item.isSubmitted" color="green" @click="approveLoan(item.loanApplicationId)">APPROVE</v-btn>
+          <v-btn :disabled="!item.isSubmitted" color="red" @click="rejectLoan(item.loanApplicationId)">REJECT</v-btn>
         </div>
+      </template>
+
+      <template v-slot:item.isSubmitted="{ item }">
+        <v-chip
+          :color="item.isSubmitted === true ? 'green' : 'red'"
+          :text="item.isSubmitted === true ? 'YES' : 'NO'"
+          class="text-uppercase"
+          size="small"
+          label
+        ></v-chip>
       </template>
 
       <template v-slot:item.loanStatus="{ item }">
@@ -96,6 +110,7 @@ import LoanService from '@/services/loan.service'
               { text: 'Loan Interest Rate', value: 'loanInterestRate' },
               { text: 'Loan Start Date', value: 'loanStartDate' },
               { text: 'Loan End Date', value: 'loanEndDate'},
+              { text: 'Submitted?', value: 'isSubmitted'},
               { text: 'Actions', value: 'actions' },
             ],
               search: '',
@@ -117,13 +132,10 @@ import LoanService from '@/services/loan.service'
         this.getLoanApplications();
       },
       methods: {
-        performAction(item) {
-          // perform some action with the item
-          console.log(item);
-        },
           getLoanApplications(){
               LoanService.getLoanApplications().then(response =>{
                   this.loanApplications = response.data;
+                  console.log(this.loanApplications);
               }).catch(error => {
                   console.log('getLoans: ' + error);
                   if(error.response.status === 401 || error.response.status === 403){

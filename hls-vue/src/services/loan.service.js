@@ -12,6 +12,14 @@ class LoanService {
     rejectLoanApplication(id){
         return axios.patch(`/loan/${id}/reject`);
     }
+
+    applyLoanApplication(loanDetails){
+        return axios.post('/loan/create', loanDetails);
+    }
+
+    saveSubmittedLoanApplication(id){
+        return axios.patch(`/loan/${id}/save`);
+    }
 }
 
 export default new LoanService();

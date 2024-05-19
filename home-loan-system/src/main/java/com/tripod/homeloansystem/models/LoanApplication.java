@@ -48,6 +48,9 @@ public class LoanApplication implements Serializable{
     @Column(name = "loan_end_date")
     private String loanEndDate;
 
+    @Column(name = "is_submitted")
+    private Boolean isSubmitted = false;
+
 
     @Override
     public String toString(){
@@ -55,7 +58,7 @@ public class LoanApplication implements Serializable{
         ", person=" + person.getPersonId() + ", loanType=" + loanType + 
         ", loanAmount=" + loanAmount + ", loanDuration=" + loanDuration + 
         ", loanStatus=" + loanStatus + ", loanInterestRate=" + loanInterestRate + 
-        ", loanStartDate=" + loanStartDate + ", loanEndDate=" + loanEndDate + "]";
+        ", loanStartDate=" + loanStartDate + ", loanEndDate=" + loanEndDate + ", isSubmitted=" + isSubmitted +"]";
     }
 }
 
