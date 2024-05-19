@@ -1,127 +1,169 @@
 <template>
-    <v-table>
-      <thead>
-        <tr>
-          <th class="text-left">
-            ID
-          </th>
-          <th class="text-left">
-            Username
-          </th>
-          <th class="text-left">
-            Loan Type
-          </th>
-          <th class="text-left">
-            Loan Amount
-          </th>
-          <th class="text-left">
-            Loan Duration
-          </th>
-          <th class="text-left">
-            Loan Status
-          </th>
-          <th class="text-left">
-            Interest
-          </th>
-          <th class="text-left">
-            start date
-          </th>
-          <th class="text-left">
-            end date
-          </th>
-          <th class="text-left">
-            Actions
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="application in loanApplications"
-          :key="application.loanApplicationId"
-        >
-          <td>{{ application.loanApplicationId }}</td>
-          <td>{{ application.personId }}</td>
-          <td>{{ application.loanType }}</td>
-          <td>{{ application.loanAmount }}</td>
-          <td>{{ application.loanDuration }}</td>
-          <td>{{ application.loanStatus }}</td>
-          <td>{{ application.loanInterestRate }}</td>
-          <td>{{ application.loanStartDate }}</td>
-          <td>{{ application.loanEndDate }}</td>
-          <td>
-            <v-btn
-              color="red"
-              @click="rejectLoan(application.loanApplicationId)"
-            >
-              Reject
-            </v-btn>
-            <v-btn
-              color="green"
-              @click="approveLoan(application.loanApplicationId)"
-            >
-              Approve
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-  </template>
-  <script>
-  import LoanService from '@/services/loan.service'
-    export default {
-        data () {
-            return {
-                loanApplications: [],
-                loanApplciation: {},
-                dialog: false,
-                update: true,
-            }
-        },
-        computed: {
-            currentUser() {
-                return this.$store.state.auth.user;
-            }
-        },
-        mounted() {
-          if (!this.currentUser) {
-            this.$router.push('/login');
+  <v-card flat>
+    <v-card-title class="d-flex align-center pe-2">
+      <v-icon icon="mdi-video-input-component"></v-icon> &nbsp;
+      Find a Loan Application
+
+      <v-spacer></v-spacer>
+
+      <v-text-field
+        v-model="search"
+        density="compact"
+        label="Search"
+        prepend-inner-icon="mdi-magnify"
+        variant="solo-filled"
+        flat
+        hide-details
+        single-line
+      ></v-text-field>
+    </v-card-title>
+
+    <v-divider></v-divider>
+    <v-data-table v-model:search="search" :headers="headers" :items="loanApplications">
+      <template v-slot:header.loanApplicationId>
+        <div>ID</div>
+      </template>
+
+      <template v-slot:header.personId>
+        <div>Person ID</div>
+      </template>
+
+      <template v-slot:header.loanType>
+        <div>Type</div>
+      </template>
+
+      <template v-slot:header.loanStatus>
+        <div>Loan Status</div>
+      </template>
+
+      <template v-slot:header.loanAmount>
+        <div>Amount</div>
+      </template>
+
+      <template v-slot:header.loanDuration>
+        <div>Duration</div>
+      </template>
+
+      <template v-slot:header.loanInterestRate>
+        <div>Interest</div>
+      </template>
+
+      <template v-slot:header.loanStartDate>
+        <div>Start Date</div>
+      </template>
+
+      <template v-slot:header.loanEndDate>
+        <div>End Date</div>
+      </template>
+
+      <template v-slot:header.actions="{ header }">
+        <div class="text-center">Take Action</div>
+      </template>
+
+      <template v-slot:item.actions="{ item }">
+        <div class="d-flex justify-center">
+          <v-btn color="green" @click="approveLoan(item.loanApplicationId)">APPROVE</v-btn>
+          <v-btn color="red" @click="rejectLoan(item.loanApplicationId)">REJECT</v-btn>
+        </div>
+      </template>
+
+      <template v-slot:item.loanStatus="{ item }">
+        <div>
+          <v-chip
+            :color="item.loanStatus === 'APPROVED' ? 'green' : item.loanStatus === 'REJECTED' ? 'red' : 'orange'"
+            :text="item.loanStatus"
+            class="text-uppercase"
+            size="small"
+            label
+          ></v-chip>
+        </div>
+      </template>
+    </v-data-table>
+  </v-card>
+</template>
+<script>
+import LoanService from '@/services/loan.service'
+  export default {
+      data () {
+          return {
+            headers: [
+              { text: 'ID', value: 'loanApplicationId' },
+              { text: 'Person ID', value: 'personId' },
+              { text: 'Loan Type', value: 'loanType' },
+              { text: 'Loan Status', value: 'loanStatus' },
+              { text: 'Loan Amount', value: 'loanAmount' },
+              { text: 'Loan Duration', value: 'loanDuration' },
+              { text: 'Loan Interest Rate', value: 'loanInterestRate' },
+              { text: 'Loan Start Date', value: 'loanStartDate' },
+              { text: 'Loan End Date', value: 'loanEndDate'},
+              { text: 'Actions', value: 'actions' },
+            ],
+              search: '',
+              loanApplications: [],
+              loanApplciation: {},
+              dialog: false,
+              update: true,
           }
-          this.getLoanApplications();
-        },
-        methods: {
-            getLoanApplications(){
-                LoanService.getLoanApplications().then(response =>{
-                    this.loanApplications = response.data;
-                }).catch(error => {
-                    console.log('getLoans: ' + error);
-                    if(error.response.status === 401 || error.response.status === 403){
-                        this.logOut();
-                    }
-                })
-            },
-
-            approveLoan(id){
-                LoanService.approveLoanApplication(id).then(response =>{
-                    this.getLoanApplications();
-                }).catch(error => {
-                    console.log('approveLoan: ' + error);
-                    if(error.response.status === 401 || error.response.status === 403){
-                        this.logOut();
-                    }
-                })
-            },
-
-            rejectLoan(id){
-                LoanService.rejectLoanApplication(id).then(response =>{
-                    this.getLoanApplications();
-                }).catch(error => {
-                    console.log('rejectLoan: ' + error);
-                    if(error.response.status === 401 || error.response.status === 403){
-                        this.logOut();
-                    }
-                })
-            }
+      },
+      computed: {
+          currentUser() {
+              return this.$store.state.auth.user;
+          }
+      },
+      mounted() {
+        if (!this.currentUser) {
+          this.$router.push('/login');
         }
-    }
+        this.getLoanApplications();
+      },
+      methods: {
+        performAction(item) {
+          // perform some action with the item
+          console.log(item);
+        },
+          getLoanApplications(){
+              LoanService.getLoanApplications().then(response =>{
+                  this.loanApplications = response.data;
+              }).catch(error => {
+                  console.log('getLoans: ' + error);
+                  if(error.response.status === 401 || error.response.status === 403){
+                      this.logOut();
+                  }
+              })
+          },
 
-  </script>
+          approveLoan(id){
+              if (confirm("Do you really want to approve the loan?")) {
+                LoanService.approveLoanApplication(id).then(response =>{
+                  this.getLoanApplications();
+                }).catch(error => {
+                  console.log('approveLoan: ' + error);
+                  if(error.response.status === 400){
+                      alert('Loan cannot be approved as it was rejected already.');
+                  }
+                  if(error.response.status === 401 || error.response.status === 403){
+                    this.logOut();
+                  }
+                })
+              }
+          },
+
+          rejectLoan(id){
+            if (confirm("Do you really want to reject the loan?")) {
+              LoanService.rejectLoanApplication(id).then(response =>{
+                  this.getLoanApplications();
+              }).catch(error => {
+                  console.log('rejectLoan: ' + error);
+                  if(error.response.status === 400){
+                      alert('Loan cannot be rejected as it was approved already.');
+                  }
+                  if(error.response.status === 401 || error.response.status === 403){
+                      this.logOut();
+                  }
+              });
+            }
+          }
+      }
+  }
+
+</script>
