@@ -103,5 +103,4 @@ public class Person implements Serializable, UserDetails{
     public boolean isEnabled() {
         return true;
     }
-    
 }

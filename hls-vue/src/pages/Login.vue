@@ -21,7 +21,7 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-btn color="primary" @click="handleLogin({ username, password })">Login</v-btn>
-                      <v-btn color="primary" @click="gotoforgot">Bhul ja</v-btn>
+                      <v-btn color="primary" @click="gotoforgot">Forgot Password</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>

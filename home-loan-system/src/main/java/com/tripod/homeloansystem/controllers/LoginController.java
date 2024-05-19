@@ -1,6 +1,7 @@
 package com.tripod.homeloansystem.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +10,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tripod.homeloansystem.exceptions.TokenRefreshException;
@@ -26,7 +30,6 @@ import com.tripod.homeloansystem.models.TokenRefreshRequest;
 import com.tripod.homeloansystem.models.TokenRefreshResponse;
 import com.tripod.homeloansystem.services.impl.PersonServiceImpl;
 import com.tripod.homeloansystem.services.impl.RefreshTokenService;
-
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -44,6 +47,9 @@ public class LoginController {
 
     @Autowired
     private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
@@ -99,6 +105,29 @@ public class LoginController {
     @GetMapping("/login")
     public String loginUser(){
         return "User logged in";
+    }
+
+    @GetMapping("/verify")
+    public Boolean verifyPersonDetails(@RequestParam String username, @RequestParam String phoneNumber, @RequestParam String dob){
+        System.out.println("Username: " + username + " Phone Number: " + phoneNumber + " DOB: " + dob);
+        Person person = personService.getPersonByUsername(username);
+        if(person != null){
+            if(person.getPhoneNumber().equals(phoneNumber) && person.getDateOfBirth().equals(dob)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @PatchMapping("/update-password")
+    public ResponseEntity<Map.Entry<String, Boolean>> updatePassword(@RequestParam String username, @RequestParam String password){
+        System.out.println("Username: " + username + " New Password: " + password);
+        Person person = personService.getPersonByUsername(username);
+        if(person != null){
+            person.setPassword(passwordEncoder.encode(password));
+            return ResponseEntity.ok(personService.updatePerson(person));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/logout")
