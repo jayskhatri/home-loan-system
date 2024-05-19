@@ -144,7 +144,6 @@
     export default {
       data () {
         return {
-          token: '',
           customers: [],
           customer: {},
           update: true,

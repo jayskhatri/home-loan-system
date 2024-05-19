@@ -1,6 +1,5 @@
 package com.tripod.homeloansystem.models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,18 +8,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "person")
-public class Person implements Serializable, UserDetails{
+public class Person implements UserDetails{
 
     private static final long serialVersionUID = 5934687059711010916L;
 
@@ -61,6 +63,9 @@ public class Person implements Serializable, UserDetails{
 
     @Column(name = "is_first_login")
     private Boolean isFirstLogin;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<LoanApplication> loanApplications;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -103,4 +108,10 @@ public class Person implements Serializable, UserDetails{
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public String toString(){
+        return "Person [personId=" + personId + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName + ", username=" + username + ", password=" + password + ", email=" + email + ", phoneNumber=" + phoneNumber + ", address=" + address + ", dateOfBirth=" + dateOfBirth + ", isAdmin=" + isAdmin + ", isFirstLogin=" + isFirstLogin + "]";
+    }
+    
 }
