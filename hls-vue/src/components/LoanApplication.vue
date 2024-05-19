@@ -133,7 +133,6 @@ export default {
         submitLoan(){
             loanService.saveSubmittedLoanApplication(this.submission.loanApplicationId).then(response => {
                 alert('Loan application submitted successfully.');
-                
                 console.log(response.data);
                 this.clearVariables();
             }).catch(error => {
