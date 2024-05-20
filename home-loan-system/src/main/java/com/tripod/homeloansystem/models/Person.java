@@ -65,7 +65,7 @@ public class Person implements UserDetails{
     private Boolean isFirstLogin;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private List<LoanApplication> loanApplications;
+    private List<LoanApplication> loanApplications = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
