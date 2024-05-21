@@ -13,5 +13,5 @@ import com.tripod.homeloansystem.models.Person;
 @Repository
 public interface LoanApplicationRepository extends JpaRepository<LoanApplication, Long>{
     Optional<List<LoanApplication>> findByLoanStatus(LoanStatus loanStatus);
-    Optional<List<LoanApplication>> findByPerson(Person person);
+   List<LoanApplication> findByPerson(Person person);
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,6 +58,19 @@ public class LoanController {
     @GetMapping("/all")
     public ResponseEntity<List<LoanApplicationDTO>> getAllLoanApplications() {
         return ResponseEntity.ok(loanApplicationService.getAllLoanApplications().stream().map(application -> loanApplicationToDTO(application)).toList());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{id}/all")
+    public ResponseEntity<List<LoanApplicationDTO>> getLoanApplicationsByPersonID(@PathVariable Long id) {
+        System.out.println("Inside getLoanApplicationsByPersonID");
+        return ResponseEntity.ok(loanApplicationService.getLoanApplicationsByPersonID(id).stream().map(application -> loanApplicationToDTO(application)).toList());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/{applicationID}")
+    public ResponseEntity<Map.Entry<String, Boolean>> deleteLoanApplicationByID(@PathVariable Long applicationID) {
+        return ResponseEntity.ok(loanApplicationService.deleteLoanApplicationById(applicationID));
     }
 
     @PreAuthorize("hasRole('USER')")

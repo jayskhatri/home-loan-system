@@ -107,7 +107,6 @@ public class PersonController {
         personDTO.setLoanApplications(loanApplications);
         return personDTO;
     }
-    
 }
 
 /*
