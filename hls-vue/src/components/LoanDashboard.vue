@@ -112,7 +112,7 @@
       location="bottom"
     >
       <v-list-item
-        prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
+        prepend-avatar="https://github.com/jayskhatri/AVL_Tree/assets/38436564/8ea85f6b-3ee1-464d-a25e-f2b20aa56c3d"
       >Loan Application submitted by: {{this.applicant.firstName}} {{this.applicant.lastName}}
       </v-list-item>
 
@@ -130,7 +130,7 @@
            link>
             <v-card-item>
               <v-card-title>Username</v-card-title>
-              <v-card-subtitle>{{this.applicant.username}}</v-card-subtitle>
+              <v-card-subtitle>{{this.applicant.username === '' ? '-' : this.applicant.username}}</v-card-subtitle>
             </v-card-item>
           </v-card>
         </v-col>
@@ -139,7 +139,7 @@
            link>
             <v-card-item>
               <v-card-title>Birth Date</v-card-title>
-              <v-card-subtitle>{{this.applicant.dateOfBirth}}</v-card-subtitle>
+              <v-card-subtitle>{{this.applicant.dateOfBirth === '' ? '-' : this.applicant.dateOfBirth}}</v-card-subtitle>
             </v-card-item>
           </v-card>
         </v-col>
@@ -148,7 +148,7 @@
            link>
             <v-card-item>
               <v-card-title>Phone Number</v-card-title>
-              <v-card-subtitle>{{this.applicant.phoneNumber}}</v-card-subtitle>
+              <v-card-subtitle>{{this.applicant.phoneNumber === '' ? '-' : this.applicant.phoneNumber}}</v-card-subtitle>
             </v-card-item>
           </v-card>
         </v-col>
@@ -157,7 +157,7 @@
            link>
             <v-card-item>
               <v-card-title>Email</v-card-title>
-              <v-card-subtitle>{{this.applicant.email}}</v-card-subtitle>
+              <v-card-subtitle>{{this.applicant.email === '' ? '-' : this.applicant.email}}</v-card-subtitle>
             </v-card-item>
           </v-card>
         </v-col>
@@ -177,7 +177,7 @@
            link>
             <v-card-item>
               <v-card-title>Loan Amount</v-card-title>
-              <v-card-subtitle>{{this.loanApplication.loanAmount}}</v-card-subtitle>
+              <v-card-subtitle>{{this.loanApplication.loanAmount === '' ? '-' : this.loanApplication.loanAmount}}</v-card-subtitle>
             </v-card-item>
           </v-card>
         </v-col>
@@ -195,7 +195,7 @@
            link>
             <v-card-item>
               <v-card-title>Duration of Loan</v-card-title>
-              <v-card-subtitle>{{this.loanApplication.loanDuration}}</v-card-subtitle>
+              <v-card-subtitle>{{this.loanApplication.loanDuration === '' ? '-' : this.loanApplication.loanDuration}}</v-card-subtitle>
             </v-card-item>
           </v-card>
         </v-col>
@@ -204,7 +204,7 @@
            link>
             <v-card-item>
               <v-card-title>Start date</v-card-title>
-              <v-card-subtitle>{{this.loanApplication.loanStartDate}}</v-card-subtitle>
+              <v-card-subtitle>{{this.loanApplication.loanStartDate === '' ? '-' : this.loanApplication.loanStartDate}}</v-card-subtitle>
             </v-card-item>
           </v-card>
         </v-col>
@@ -259,7 +259,7 @@
            link>
             <v-card-item>
               <v-card-title>End date</v-card-title>
-              <v-card-subtitle>{{this.loanApplication.loanEndDate}}</v-card-subtitle>
+              <v-card-subtitle>{{this.loanApplication.loanEndDate === '' ? '-' : this.loanApplication.loanEndDate}}</v-card-subtitle>
             </v-card-item>
           </v-card>
         </v-col>
