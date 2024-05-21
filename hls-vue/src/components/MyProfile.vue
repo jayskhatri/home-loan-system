@@ -90,7 +90,3 @@ export default {
     }
 }
 </script>
-
-<style>
-/* Add custom styles here if needed */
-</style>
