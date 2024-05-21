@@ -13,6 +13,7 @@ class TokenService {
       let user = JSON.parse(localStorage.getItem("user"));
       user.jwtToken = accessToken;
       user.refreshToken.token = refreshToken
+      user.refreshToken.expiryDate = refreshToken.expiresIn;
       localStorage.setItem("user", JSON.stringify(user));
     }
   
@@ -30,9 +31,4 @@ class TokenService {
     }
   }
   
-  export default new TokenService();
-  
-  /**
-   * 
-   
-   */
+export default new TokenService();
