@@ -113,9 +113,8 @@
     >
       <v-list-item
         prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
-        append-icon="mdi-close"
       >Loan Application submitted by: {{this.applicant.firstName}} {{this.applicant.lastName}}
-      </v-list-item>      
+      </v-list-item>
 
       <v-divider></v-divider>
 

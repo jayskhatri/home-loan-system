@@ -20,22 +20,19 @@
                     Interest Rate : {{ getInterestRatesByLoanType() }}
                 </v-text-field>
             </v-col>
-            <v-col cols="12" sm="6" md="4" @click="handleDialog">
-                <v-dialog v-model="dialog" max-width="500px">
-                    <template v-slot:activator="{ on }">
-                        <v-text-field hide-details="auto" hint="Start Date" label="Start Date" outlined>{{
-                            format(startDate) }}</v-text-field>
-                    </template>
-                    <v-date-picker v-model="startDate" no-title></v-date-picker>
-                    <v-card-actions>
-                        <v-btn color="primary" text @click="dialog = false">Cancel</v-btn>
-                        <v-btn color="primary" text @click="dialog = false">OK</v-btn>
-                    </v-card-actions>
-                </v-dialog>
+            <v-col cols="12" sm="6" md="4">
+                <v-text-field 
+                    v-model="startDate" 
+                    label="Start Date" 
+                    type="date">
+                </v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-                <v-text-field v-model="interestRate" outlined disabled>
-                    End Date : {{ calculateEndDate(startDate, loanDuration) ?? ''}}
+                <v-text-field 
+                    v-model="endDate" 
+                    outlined
+                    disabled>
+                    End Date: {{ this.formattedEndDate }}
                 </v-text-field>
             </v-col>
         </v-row>
@@ -44,7 +41,6 @@
                 <v-btn :loading="loading" color="primary" v-if="!saveClicked" @click="saveForLater">Save For Later</v-btn>
                 <v-btn :loading="loading" color="primary" v-if="saveClicked" @click="submitLoan">Submit</v-btn>
             </v-col>
-
         </v-row>
     </v-container>
 </template>
@@ -52,6 +48,7 @@
 <script>
 import loanService from '@/services/loan.service';
 import UserService from '@/services/user.service';
+import { format } from 'date-fns';
 export default {
     data() {
         return {
@@ -64,7 +61,7 @@ export default {
             loanAmount: '',
             loanDuration: '',
             interestRate: '',
-            startDate: null,
+            startDate: '',
             loanTypes: ['HOME_LOAN', 'CAR_LOAN', 'PERSONAL_LOAN', 'EDUCATION_LOAN'],
             interestRatesAccordingToLoanType: [
                 {
@@ -89,6 +86,16 @@ export default {
     computed: {
         currentUser() {
             return this.$store.state.auth.user;
+        },
+        formattedStartDate() {
+            var startDate = new Date(this.startDate);
+            return format(startDate, 'dd/MM/yyyy');
+        },
+        formattedEndDate() {
+            if(this.startDate === '' || this.loanDuration === '') return '-';
+            var endD = new Date(this.startDate);
+            endD.setFullYear(endD.getFullYear() + parseInt(this.loanDuration));
+            return format(endD, 'dd/MM/yyyy');
         }
     },
     mounted() {
@@ -100,7 +107,7 @@ export default {
     },
     methods: {
         getInterestRatesByLoanType(){
-            let interestRate = '';
+            let interestRate = '-';
             this.interestRatesAccordingToLoanType.forEach(rate => {
                 if(rate.type === this.loanType){
                     interestRate = rate.rates;
@@ -131,12 +138,6 @@ export default {
             this.submission = {};
             this.saveClicked = false;
         },
-        calculateEndDate(startDate, duration){
-            if(startDate === null || duration === '') return '';
-            let endDate = new Date(startDate);
-            endDate.setFullYear(eval(endDate.getFullYear()) + eval(duration));
-            return this.format(endDate);
-        },
         saveForLater() {
             this.loading = true;
             console.log('Submitting loan application...');
@@ -145,7 +146,8 @@ export default {
             console.log('Loan Amount: ' + this.loanAmount);
             console.log('Loan Duration: ' + this.loanDuration);
             console.log('Interest Rate: ' + this.getInterestRatesByLoanType());
-            console.log('Start Date: ' + this.format(this.startDate));
+            console.log('Start Date: ' + this.formattedStartDate);
+            console.log('End Date: ' + this.formattedEndDate);
 
             setTimeout(() => {
                 loanService.applyLoanApplication({
@@ -155,8 +157,8 @@ export default {
                     loanAmount: this.loanAmount,
                     loanDuration: this.loanDuration,
                     loanInterestRate: this.getInterestRatesByLoanType(),
-                    loanStartDate: this.format(this.startDate),
-                    loanEndDate: this.calculateEndDate(this.startDate, this.loanDuration),
+                    loanStartDate: this.formattedStartDate,
+                    loanEndDate: this.formattedEndDate,
                     isSubmitted: false
                 }).then(response => {
                     this.submission = response.data;
