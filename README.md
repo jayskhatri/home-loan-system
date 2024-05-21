@@ -12,5 +12,5 @@
 
 ### frontend
 - Open `hls-vue` folder
-- run `yarn add`
-- run `npm dev`
+- run `yarn install`
+- run `yarn dev`
