@@ -19,7 +19,12 @@
     </v-card-title>
 
     <v-divider></v-divider>
-    <v-data-table v-model:search="search" :headers="headers" :items="loanApplications">
+    <v-data-table 
+      v-model:search="search" 
+      :headers="headers" 
+      :items="loanApplications" 
+      :loading="loadingTable"
+      >
       <template v-slot:header.loanApplicationId>
         <div>ID</div>
       </template>
@@ -81,6 +86,12 @@
         ></v-chip>
       </template>
 
+      <template v-slot:item.loanType="{ item }">
+        <div @click="handleClick(item)">
+          {{ item.loanType }}
+        </div>
+      </template>
+
       <template v-slot:item.loanStatus="{ item }">
         <div>
           <v-chip
@@ -93,13 +104,185 @@
         </div>
       </template>
     </v-data-table>
+
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary
+      width="1000"
+      location="bottom"
+    >
+      <v-list-item
+        prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
+        append-icon="mdi-close"
+      >Loan Application submitted by: {{this.applicant.firstName}} {{this.applicant.lastName}}
+      </v-list-item>      
+
+      <v-divider></v-divider>
+
+      <v-row>
+        <v-col cols="12" class="text-center">
+          <h2>Person Details</h2>
+        </v-col>
+      </v-row>
+      <v-divider></v-divider>
+      <v-row>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Username</v-card-title>
+              <v-card-subtitle>{{this.applicant.username}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Birth Date</v-card-title>
+              <v-card-subtitle>{{this.applicant.dateOfBirth}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Phone Number</v-card-title>
+              <v-card-subtitle>{{this.applicant.phoneNumber}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Email</v-card-title>
+              <v-card-subtitle>{{this.applicant.email}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-divider></v-divider>
+      <v-row>
+        <v-col cols="12" class="text-center">
+          <h2>Application Details</h2>
+        </v-col>
+      </v-row>
+      <v-divider></v-divider>
+      
+      <v-row>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Loan Amount</v-card-title>
+              <v-card-subtitle>{{this.loanApplication.loanAmount}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Loan Interest</v-card-title>
+              <v-card-subtitle>{{this.loanApplication.loanInterestRate==='' ? '-' : this.loanApplication.loanInterestRate}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Duration of Loan</v-card-title>
+              <v-card-subtitle>{{this.loanApplication.loanDuration}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Start date</v-card-title>
+              <v-card-subtitle>{{this.loanApplication.loanStartDate}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Loan Submitted?</v-card-title>
+              <v-card-subtitle>
+                <v-chip
+                :color="this.loanApplication.isSubmitted === true ? 'green' : 'red'"
+                :text="this.loanApplication.isSubmitted === true ? 'YES' : 'NO'"
+                class="text-uppercase"
+                size="small"
+                label
+              ></v-chip>
+              </v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Loan Type</v-card-title>
+              <v-card-subtitle>{{this.loanApplication.loanType==='HOME_LOAN' ? 'HOME' : this.loanApplication.loanType==='EDUCATION_LOAN' ? 'EDUCATION' : this.loanApplication.loanType==='PERSONAL_LOAN' ? 'PERSONAL' : 'CAR'}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>Loan Status</v-card-title>
+              <v-card-subtitle>
+                <v-chip
+                  :color="this.loanApplication.loanStatus === 'APPROVED' ? 'green' : this.loanApplication.loanStatus === 'REJECTED' ? 'red' : 'orange'"
+                  :text="this.loanApplication.loanStatus"
+                  class="text-uppercase"
+                  size="small"
+                  label
+                ></v-chip>
+              </v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-card
+           link>
+            <v-card-item>
+              <v-card-title>End date</v-card-title>
+              <v-card-subtitle>{{this.loanApplication.loanEndDate}}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-expansion-panels class="my-4" variant="popout">
+        <v-expansion-panel
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+          title="EMI CALCULATION"
+        ></v-expansion-panel>
+     </v-expansion-panels>
+    </v-navigation-drawer>
   </v-card>
 </template>
 <script>
 import LoanService from '@/services/loan.service'
+import userService from '@/services/user.service';
   export default {
       data () {
           return {
+            drawer: null,
+            loadingTable: false,
             headers: [
               { text: 'ID', value: 'loanApplicationId' },
               { text: 'Person ID', value: 'personId' },
@@ -115,7 +298,8 @@ import LoanService from '@/services/loan.service'
             ],
               search: '',
               loanApplications: [],
-              loanApplciation: {},
+              loanApplication: {},
+              applicant: {},
               dialog: false,
               update: true,
           }
@@ -133,15 +317,19 @@ import LoanService from '@/services/loan.service'
       },
       methods: {
           getLoanApplications(){
-              LoanService.getLoanApplications().then(response =>{
-                  this.loanApplications = response.data;
-                  console.log(this.loanApplications);
-              }).catch(error => {
-                  console.log('getLoans: ' + error);
-                  if(error.response.status === 401 || error.response.status === 403){
-                      this.logOut();
-                  }
-              })
+              this.loadingTable = true;
+              setTimeout(() => {
+                LoanService.getLoanApplications().then(response =>{
+                    this.loanApplications = response.data;
+                }).catch(error => {
+                    console.log('getLoans: ' + error);
+                    if(error.response.status === 401 || error.response.status === 403){
+                        this.logOut();
+                    }
+                });
+
+                this.loadingTable = false;
+              }, 1000);
           },
 
           approveLoan(id){
@@ -174,6 +362,22 @@ import LoanService from '@/services/loan.service'
                   }
               });
             }
+          },
+          async handleClick(item){
+              this.drawer = !this.drawer;
+              this.loanApplication = this.loanApplications.find(loan => loan.loanApplicationId === item.loanApplicationId);
+              try{
+                const response = await userService.getCustomerById(this.loanApplication.personId);
+                this.applicant = response.data;
+              }catch(error){
+                console.log('LoanDashBoard::getCustomerById: ' + error);
+              }
+              console.log(this.loanApplication);
+              console.log('Hello, you clicked? ' + item.loanApplicationId + ' --> ' + this.applicant.personId);
+          },
+          logOut(){
+              this.$store.dispatch('auth/logout');
+              this.$router.push('/login');
           }
       }
   }

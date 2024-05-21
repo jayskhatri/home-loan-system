@@ -20,14 +20,6 @@ class AuthService {
   logout() {
     TokenService.removeUser();
   }
-
-//   register({ username, email, password }) {
-//     return axios.post("/auth/signup", {
-//       username,
-//       email,
-//       password
-//     });
-//   }
 }
 
 export default new AuthService();
@@ -49,5 +41,4 @@ LOGIN RESPONSE
         "ADMIN"
     ]
 }
-  
  */
