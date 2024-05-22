@@ -1,6 +1,6 @@
 # Home Loan System
 
-- Open settings of vs code search for `java.settings.url` and setup the path to vscode-java.prefs
+- Open settings of vs code search for `java.settings.url` and setup the path to [vscode-java.prefs](https://github.com/jayskhatri/home-loan-system/blob/main/home-loan-system/vscode-java.prefs)
 
 ## Setting up project
 - Clone repo
