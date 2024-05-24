@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tripod.homeloansystem.models.LoanApplication;
 import com.tripod.homeloansystem.repositories.LoanApplicationRepository;
+import com.tripod.homeloansystem.repositories.PersonRepository;
 import com.tripod.homeloansystem.services.LoanApplicationService;
 
 @Service
@@ -19,6 +21,9 @@ public class LoanApplicationServiceImpl implements Serializable, LoanApplication
 
     @Autowired
     private LoanApplicationRepository loanApplicationRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
 
     @Override
     public LoanApplication createLoanApplication(LoanApplication application) {
@@ -61,6 +66,10 @@ public class LoanApplicationServiceImpl implements Serializable, LoanApplication
     @Override
     public List<LoanApplication> getAllLoanApplications() {
         return loanApplicationRepository.findAll();
+    }
+
+    public List<LoanApplication> getLoanApplicationsByPersonID(Long personID) {
+        return loanApplicationRepository.findByPerson(personRepository.findById(personID).get());
     }
     
 }

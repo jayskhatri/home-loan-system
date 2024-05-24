@@ -5,6 +5,10 @@ class LoanService {
         return axios.get('/loan/all');
     }
 
+    getLoanApplicationsByPersonID(id){
+        return axios.get(`/loan/${id}/all`);
+    }
+
     approveLoanApplication(id){
         return axios.patch(`/loan/${id}/approve`);
     }
@@ -19,6 +23,15 @@ class LoanService {
 
     saveSubmittedLoanApplication(id){
         return axios.patch(`/loan/${id}/save`);
+    }
+
+    deleteLoanApplicationByID(id){
+        return axios.delete(`/loan/${id}`);
+    }
+
+    updateLoanApplication(id, loanDetails){
+        console.log(loanDetails);
+        return axios.patch(`/loan/${id}/update`, loanDetails);
     }
 }
 

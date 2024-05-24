@@ -113,5 +113,4 @@ public class Person implements UserDetails{
     public String toString(){
         return "Person [personId=" + personId + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName + ", username=" + username + ", password=" + password + ", email=" + email + ", phoneNumber=" + phoneNumber + ", address=" + address + ", dateOfBirth=" + dateOfBirth + ", isAdmin=" + isAdmin + ", isFirstLogin=" + isFirstLogin + "]";
     }
-    
 }
