@@ -28,6 +28,11 @@ class LoanService {
     deleteLoanApplicationByID(id){
         return axios.delete(`/loan/${id}`);
     }
+
+    updateLoanApplication(id, loanDetails){
+        console.log(loanDetails);
+        return axios.patch(`/loan/${id}/update`, loanDetails);
+    }
 }
 
 export default new LoanService();

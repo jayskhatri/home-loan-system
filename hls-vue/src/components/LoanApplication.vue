@@ -118,10 +118,6 @@ export default {
         handleDialog() {
             this.dialog = !this.dialog;
         },
-        format(date) {
-            if (date === null) return '';
-            return date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
-        },
         getCustomerById(id){
             UserService.getCustomerById(id).then(response => {
               this.customer = response.data;
