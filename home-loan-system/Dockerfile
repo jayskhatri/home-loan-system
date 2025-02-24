@@ -19,7 +19,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the built jar file from the build stage
-COPY --from=build /app/target/home-loan-system-0.0.1-SNAPSHOT.jar
+COPY --from=build /app/target/home-loan-system-0.0.1-SNAPSHOT.jar home-loan-system-0.0.1-SNAPSHOT.jar
 
 # Expose the port the application runs on
 EXPOSE 8080
