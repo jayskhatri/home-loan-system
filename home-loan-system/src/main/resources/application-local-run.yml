@@ -1,13 +1,12 @@
-#postgresql://hls_owner:npg_MqjzDhE5HeB6@ep-bold-unit-a5sq5uee-pooler.us-east-2.aws.neon.tech/hls?sslmode=require
 spring:
     datasource:
-        url: ${DATASOURCE_URL}
-        username: ${DATASOURCE_USERNAME}
-        password: ${DATASOURCE_PASSWORD}
-        driver-class-name: org.postgresql.Driver
+        url: jdbc:mysql://localhost:3306/hls
+        username: root
+        password:
+        driver-class-name: com.mysql.jdbc.Driver
 
     jpa:
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        database-platform: org.hibernate.dialect.MySQL8Dialect
         generate-ddl: true
         hibernate.ddl-auto: update
 
@@ -36,3 +35,4 @@ management:
             base-path: /actuator
             exposure:
                 include: "*"
+
